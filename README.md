@@ -10,8 +10,8 @@
 
 - 🎛️ **LuCI 控制面板** — Web 界面控制空调、配置设备、查看日志
 - 🌤️ **天气双数据源** — 百度 + 和风，自动回退 + 旧值兜底
-- 🌀 **台风自动保护** — < 100km 强制关闭所有空调（沿海用户安全设计）
-- ⏰ **定时 + 自动调温** — 2h 相对间隔 + 整点定时开关机
+- 🌀 **台风自动保护** — < 100km 强制关闭所有空调，防止外机损毁
+- ⏰ **定时 + 自动调温** — 2h自动根据室外温度调整 + 整点定时按温度规则开关机
 - 🛡️ **service 守护** — procd 守护 + 开机自启 + 异常降级
 - 📥 **日志下载** — 14 天日期网格 + Markdown 文件下载
 - 🔌 **UCI 双向同步** — CBI 设置 ↔ config.json 自动同步
@@ -34,13 +34,16 @@ opkg install /tmp/broadlinkac_3.0-1_*.ipk
 
 ### 2. 打开 LuCI 控制面板
 
-浏览器访问：`http://192.168.1.1/cgi-bin/luci/admin/services/broadlinkac`
+- 浏览器访问：进入路由器的LuCI界面，点击“服务”下的Broadlink空调控制
+- 正常默认是192.168.1.1或者192.168.0.1，请根据自己的路由器使用
+
 
 ### 3. 配置 API Key
 
 **服务 → Broadlink 空调控制 → 设置**：
 - 百度天气 API Key（[申请](https://lbsyun.baidu.com/apiconsole/key)）— 推荐
 - 和风天气 API Key + Host（[申请](https://dev.qweather.com/)）— 备选
+- 双天气源都是免费的，百度每月150000次调用，和风每月50000次调用
 
 ### 4. 扫描局域网设备
 
@@ -105,17 +108,18 @@ broadlinkac/
 └── ipk-build/build_ipk.py              # 打包脚本
 ```
 
-## 🔗 姊妹项目
+## 🔗 多平台桌面端和Agent调用的项目
 
-**桌面端**：[BroadlinkAC-For-Agent](https://github.com/oywq00008-cell/BroadlinkAC-For-Agent)
+**项目仓库**：[BroadlinkAC-For-Agent](https://github.com/oywq00008-cell/BroadlinkAC-For-Agent)
 - 跨平台桌面 GUI（Windows / macOS / Linux）
 - AI Agent Skill 接口
-- 实时手动控制
+- 更多功能，更加灵活，强烈推荐！
 
 **路由器端（本仓库）**：
 - 7×24 小时无界面运行
 - 天气/台风自动响应
-- 适合"装了就不用管"的家庭场景
+- 自动化根据室外天气调整温度
+- 适合"装了就不用管"的场景
 
 两个项目**共享核心算法**（ac_control / typhoon / weather / scheduler），但**独立进化**——路由器端走"安全优先 + 兜底降级"，桌面端走"用户配置 + 弹窗交互"。
 
@@ -126,5 +130,5 @@ MIT — 详见 [LICENSE](LICENSE)
 ## 🙏 致谢
 
 - 红外协议基于 [python-broadlink](https://github.com/mjg59/python-broadlink) 二次开发
-- 天气数据来自百度地图开放平台 + 和风天气
-- 台风数据来自中国气象局 (NMC)
+- 天气数据来自百度地图开放平台 + 和风天气(免费申请)
+- 台风数据来自中国气象局 (NMC) / 美国国家飓风中心(NHC)
