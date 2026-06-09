@@ -1,6 +1,6 @@
 # BroadlinkAC-OpenWRT
 
-> OpenWRT 路由器端 Broadlink 空调控制插件 —— 桌面端的"装了就不用管"无头兄弟。
+> OpenWRT 路由器端Broadlink全自动空调控制插件，自动获取天气数据，实现路由器全天候自动管控空调和调温
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![OpenWRT](https://img.shields.io/badge/OpenWRT-21%2B-blue.svg)]()
