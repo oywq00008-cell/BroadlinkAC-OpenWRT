@@ -17,10 +17,6 @@ The Broadlink fully automatic air conditioning control plugin for OpenWRT router
 - 📥 **Log download** — 14-day date grid + Markdown file download
 - 🔌 **UCI bidirectional sync** — CBI settings ↔ config.json auto-sync
 
-## 📸 Screenshots
-
-*(TODO: LuCI control panel screenshot)*
-
 ## 🚀 Quick Start
 
 ### 1. Download IPK
