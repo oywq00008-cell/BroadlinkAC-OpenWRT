@@ -1,0 +1,14 @@
+*.ipk
+*.tar.gz
+*.zip
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+Thumbs.db
+*.swp
+*.bak
+broadlinkac-openwrt.tar.gz
+broadlinkac_*.ipk
+.idea/
+.vscode/
