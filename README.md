@@ -6,7 +6,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![OpenWRT](https://img.shields.io/badge/OpenWRT-21%2B-blue.svg)]()
 [![Python](https://img.shields.io/badge/Python-3.8%2B-green.svg)]()
-
+![控制面板](控制面板.png)
+![全局设置](全局设置.png)
 ## ✨ 特性
 
 - 🎛️ **LuCI 控制面板** — Web 界面控制空调、配置设备、查看日志
