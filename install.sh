@@ -1,46 +1,41 @@
 #!/bin/sh
-# BroadlinkAC manual installer for OpenWRT routers
-# Run on your router: sh /tmp/broadlinkac_install.sh
+# BroadlinkAC one-click installer for OpenWRT routers
+# Usage: bash install.sh  (or copy IPK + this script to router, then bash install.sh)
+#
+# 自动处理: opkg 依赖 + hvac_ir (pip) + IPK 主体
 
 set -e
-INSTALL_DIR="/usr/lib/broadlinkac"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+IPK="$(ls "$SCRIPT_DIR"/broadlinkac_*.ipk 2>/dev/null | head -1)"
 
-echo "=== BroadlinkAC OpenWRT Installer ==="
-echo ""
-
-# 1. Install Python deps
-echo "[1/4] Installing system dependencies..."
-opkg update
-opkg install python3-light python3-urllib python3-json python3-math
-opkg install python3-threading python3-datetime python3-re python3-socket
-opkg install python3-ssl python3-gzip python3-broadlink python3-schedule
-opkg install python3-pip
-
-# 2. Install hvac_ir via pip
-echo "[2/4] Installing hvac_ir..."
-pip3 install hvac_ir
-
-# 3. Copy files
-echo "[3/4] Installing BroadlinkAC..."
-mkdir -p "$INSTALL_DIR/broadlinkac_core"
-mkdir -p "$INSTALL_DIR/protocols"
-cp /tmp/broadlinkac_files/broadlinkac_service.py "$INSTALL_DIR/"
-cp /tmp/broadlinkac_files/broadlinkac_core/*.py "$INSTALL_DIR/broadlinkac_core/"
-cp /tmp/broadlinkac_files/protocols/*.py "$INSTALL_DIR/protocols/"
-
-# 4. Init dirs
-mkdir -p /root/.ac_controller/logs
-if [ ! -f /root/.ac_controller/config.json ]; then
-    echo '{"api_key":"","qw_host":"","devices":{},"current_device_mac":""}' > /root/.ac_controller/config.json
-    echo "  Default config.json created — edit with your settings!"
+if [ -z "$IPK" ]; then
+    echo "ERROR: 找不到 *.ipk 文件，请把 install.sh 跟 .ipk 放同一目录"
+    exit 1
 fi
 
+echo "=== BroadlinkAC OpenWRT 一键安装器 ==="
+echo "IPK: $(basename "$IPK")"
 echo ""
-echo "=== Done! ==="
-echo "Start: python3 $INSTALL_DIR/broadlinkac_service.py &"
-echo "Test:  python3 -c 'from broadlinkac_core import init; init(); print(\"OK\")'"
+
+# 1. opkg 依赖
+echo "[1/3] 装 opkg 依赖..."
+opkg update
+opkg install python3-light python3-pip python3-urllib python3-json \
+           python3-broadlink python3-schedule 2>/dev/null || true
+
+# 2. IPK 主体
+echo "[2/3] 装插件 IPK..."
+opkg install "$IPK" --force-depends || opkg install "$IPK"
+
+# 3. hvac_ir (pip)
+echo "[3/3] 装 hvac_ir (pip)..."
+pip3 install hvac_ir --break-system-packages 2>/dev/null || \
+pip3 install hvac_ir 2>/dev/null || \
+echo "WARNING: pip3 install hvac_ir 失败，请手动 pip3 install hvac_ir"
+
 echo ""
-echo "Scan devices from any computer with Agent:"
-echo "  from broadlinkac_core import init, get_device_list"
-echo "  init()"
-echo "  for mac, name in get_device_list(): print(name, mac)"
+echo "=== 安装完成 ==="
+LAN_IP=$(uci get network.lan.ipaddr 2>/dev/null || echo "192.168.1.1")
+echo "浏览器打开: http://$LAN_IP/cgi-bin/luci/admin/services/broadlinkac"
+echo "或扫描局域网设备: 桌面端 Agent 用 'from broadlinkac_core import get_device_list'"
+echo ""
