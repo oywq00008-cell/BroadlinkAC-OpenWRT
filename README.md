@@ -1,4 +1,5 @@
-# BroadlinkAC-OpenWRT[English](https://github.com/oywq00008-cell/BroadlinkAC-OpenWRT/blob/main/README_EN.md)
+[-中文-](https://github.com/oywq00008-cell/BroadlinkAC-OpenWRT/blob/main/README.md) / [-English-](https://github.com/oywq00008-cell/BroadlinkAC-OpenWRT/blob/main/README_EN.md)
+# BroadlinkAC-OpenWRT
 
 > OpenWRT 路由器端Broadlink全自动空调控制插件，自动获取天气数据，实现路由器全天候自动管控空调和调温
 
