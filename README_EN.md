@@ -7,13 +7,16 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![OpenWRT](https://img.shields.io/badge/OpenWRT-21%2B-blue.svg)]()
 [![Python](https://img.shields.io/badge/Python-3.8%2B-green.svg)]()
+[![Release](https://img.shields.io/badge/Release-v3.2-blue)](https://github.com/oywq00008-cell/BroadlinkAC-OpenWRT/releases)
 
 ## ✨ Features
 
 - 🎛️ **LuCI Control Panel** — Web UI for AC control, device config, log viewing
 - 🌤️ **Dual Weather Source** — Baidu + QWeather, auto-fallback + stale-cache rescue
 - 🌀 **Storm Auto-Protection** — Force-shutdown all ACs when storm < 100km
-- ⏰ **Scheduling + Auto-Adjust** — Timed on/off + temperature-adaptive mode switching
+- ⏰ **Multi-Group Schedule Templates** — Separate weekday/weekend schedules with time slots
+- 🌡️ **Standalone Temp Rules** — Shared by scheduling and auto-adjust, weather-based decisions
+- 🏷️ **Multi-Device Management** — Auto-dedup same-model devices, custom nicknames
 - 🛡️ **Built-in hvac_ir** — 13 IR protocols bundled, zero pip dependencies
 - 📥 **Log Download** — 14-day date grid + Markdown file download
 
@@ -29,76 +32,38 @@
 
 ## 🚀 Quick Start
 
-### 1. Download & Install
+### Option A: IPK (Recommended)
 
-Choose one of the following methods:
+Download `broadlinkac_3.2-1_all.ipk` from [Releases](https://github.com/oywq00008-cell/BroadlinkAC-OpenWRT/releases).
 
-```bash
-cd /tmp
-bash install.sh
-```
+Open your router's LuCI web interface → System → Software → Upload Package, select the IPK file. Done.
 
-`install.sh` handles everything: system dependencies → IPK install → hvac_ir via pip.
+### Option B: .run Installer
 
-### 2. Open LuCI Control Panel
-
-Navigate to: `http://192.168.1.1/cgi-bin/luci/admin/services/broadlinkac`
-
-### 3. Configure API Key
-
-**Services → Broadlink AC Control → Settings**:
-
-| Source | Free Quota | Sign Up |
-|--------|-----------|---------|
-| Baidu Weather (recommended) | 150K calls/month | [Baidu Maps Console](https://lbsyun.baidu.com/apiconsole/key) |
-| QWeather (fallback) | 50K calls/month | [QWeather Console](https://console.qweather.com) |
-
-### 4. Scan for Devices
-
-Click **Scan LAN Devices** in the control panel to auto-discover Broadlink RM.
-
-## 🛠️ Compatibility
-
-| Item | Supported |
-|------|-----------|
-| OpenWRT | 21.02+ |
-| Python | 3.8+ |
-| LuCI | 19.07+ |
-| Broadlink Devices | RM Mini 3 / RM4 Mini / RM Pro+ |
-| Architecture | aarch64_generic (A53/A55/A57/A72/A73/A76) |
-
-## 📦 Manual IPK Build
+Download `BroadlinkAC-3.2.zip` from [Releases](https://github.com/oywq00008-cell/BroadlinkAC-OpenWRT/releases), extract it:
 
 ```bash
-cd ipk-build
-python3 build_ipk.py
-# Output: broadlinkac_3.1-1_aarch64_generic.ipk
+# Upload to router
+scp broadlinkac_3.2.run root@your-router-ip:/tmp/
+
+# Install
+ssh root@your-router-ip "bash /tmp/broadlinkac_3.2.run"
 ```
 
-## 📁 Directory Structure
+> See `使用说明.txt` inside the ZIP for detailed steps (macOS / Windows / Linux).
 
-```
-broadlinkac/
-├── files/
-│   ├── etc/
-│   │   ├── config/broadlinkac          # UCI default config
-│   │   ├── init.d/broadlinkac          # procd daemon
-│   │   └── uci-defaults/99-broadlinkac # First-boot setup
-│   └── usr/
-│       ├── lib/broadlinkac/            # Python core
-│       │   ├── broadlinkac_core/       # Control / Weather / Storm / Scheduler / Log
-│       │   ├── protocols/              # Custom IR protocols
-│       │   ├── broadlinkac_api.py      # LuCI CLI interface
-│       │   └── broadlinkac_service.py  # procd background daemon
-│       └── lib/lua/luci/               # LuCI pages
-│           ├── controller/broadlinkac.lua
-│           ├── model/cbi/broadlinkac.lua
-│           └── view/broadlinkac/dashboard.htm
-├── ipk-build/                          # IPK build scripts
-│   ├── build_ipk.py
-│   └── CONTROL/{control,postinst}
-└── install.sh                          # One-click installer
-```
+### First-Time Setup
+
+Open `http://your-router-ip/cgi-bin/luci/admin/services/broadlinkac`
+
+1. Fill in QWeather API Key in Settings ([free sign-up](https://github.com/oywq00008-cell/BroadlinkAC-OpenWRT/blob/main/docs/使用指南.md))
+2. Search and select your city location
+3. Click **Scan Devices** to discover Broadlink RM
+4. Select your AC brand in device settings
+
+## 🎛️ Supported Brands
+
+Gree, Midea, Hualing, Xiaomi, Haier, Hisense, Hitachi, Daikin, Mitsubishi, Panasonic, Fujitsu, AUX, Ballu, Carrier, Hyundai, Fuego
 
 ## 🔗 Sister Project
 
@@ -114,6 +79,6 @@ MIT — see [LICENSE](LICENSE)
 
 ## 🙏 Acknowledgments
 
-- IR protocols: [python-broadlink](https://github.com/mjg59/python-broadlink) + [hvac_ir](https://github.com/nicko858/hvac_ir)
+- IR protocols: [python-broadlink](https://github.com/mjg59/python-broadlink) + [hvac_ir](https://github.com/shprota/hvac_ir)
 - Weather data: Baidu Maps Open Platform + QWeather
 - Storm data: China NMC + US NHC
